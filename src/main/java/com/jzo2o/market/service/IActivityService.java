@@ -1,6 +1,7 @@
 package com.jzo2o.market.service;
 
 import com.jzo2o.common.model.PageResult;
+import com.jzo2o.market.enums.ActivityStatusEnum;
 import com.jzo2o.market.model.domain.Activity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jzo2o.market.model.dto.request.ActivityQueryForPageReqDTO;
@@ -21,4 +22,36 @@ import java.util.List;
 public interface IActivityService extends IService<Activity> {
 
 
+    /**
+     * 保存优惠券活动
+     * @param activitySaveReqDTO
+     */
+    void saveActivity(ActivitySaveReqDTO activitySaveReqDTO);
+
+    /**
+     * 分页查询优惠券活动
+     * @param activityQueryForPageReqDTO
+     */
+    PageResult<ActivityInfoResDTO> pageQueryActivity(ActivityQueryForPageReqDTO activityQueryForPageReqDTO);
+
+
+    /**
+     * 查询优惠券活动详情
+     * @param id
+     * @return
+     */
+    ActivityInfoResDTO getActivityDetail(Long id);
+
+    /**
+     * 撤销优惠券活动
+     * @param id
+     */
+    void revokeActivity(Long id);
+
+    /**
+     * 按状态查询活动
+     * @param activityStatusEnum
+     * @return
+     */
+    List<Activity> queryWithStatus(ActivityStatusEnum activityStatusEnum);
 }

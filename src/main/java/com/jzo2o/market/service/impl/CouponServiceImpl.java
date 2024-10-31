@@ -20,6 +20,7 @@ import com.jzo2o.market.model.domain.Activity;
 import com.jzo2o.market.model.domain.Coupon;
 import com.jzo2o.market.model.domain.CouponWriteOff;
 import com.jzo2o.market.model.dto.request.CouponOperationPageQueryReqDTO;
+import com.jzo2o.market.model.dto.request.MyCouponReqDTO;
 import com.jzo2o.market.model.dto.request.SeizeCouponReqDTO;
 import com.jzo2o.market.model.dto.response.ActivityInfoResDTO;
 import com.jzo2o.market.model.dto.response.CouponInfoResDTO;
@@ -77,4 +78,34 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> impleme
     private ICouponWriteOffService couponWriteOffService;
 
 
+    @Override
+    public PageResult<CouponInfoResDTO> pageQueryCoupon(CouponOperationPageQueryReqDTO couponOperationPageQueryReqDTO) {
+        Page<Coupon> page = new Page<>(couponOperationPageQueryReqDTO.getPageNo(), couponOperationPageQueryReqDTO.getPageSize());
+        LambdaQueryWrapper<Coupon> queryWrapper = new LambdaQueryWrapper<Coupon>()
+                .eq(BeanUtils.isNotEmpty(couponOperationPageQueryReqDTO.getActivityId()), Coupon::getActivityId, couponOperationPageQueryReqDTO.getActivityId());
+        this.page(page, queryWrapper);
+        //查询结果返回DTO
+        List<CouponInfoResDTO> couponInfoResDTOList = page.getRecords().stream()
+                .map(coupon -> BeanUtils.toBean(coupon, CouponInfoResDTO.class))
+                .collect(Collectors.toList());
+        PageResult<CouponInfoResDTO> pageResult = new PageResult<>();
+        pageResult.setTotal(page.getTotal());
+        pageResult.setList(couponInfoResDTOList);
+        return pageResult;
+    }
+
+    @Override
+    public CouponInfoResDTO myCoupon(MyCouponReqDTO myCouponReqDTO) {
+        Long UserId= UserContext.currentUserId();
+        //查询用户领取的优惠券
+        Coupon coupon = this.getOne(new LambdaQueryWrapper<Coupon>()
+                .eq(Coupon::getUserId, UserId)
+                .eq(Coupon::getStatus, myCouponReqDTO.getStatus()));
+        return BeanUtils.toBean(coupon, CouponInfoResDTO.class);
+    }
+
+    @Override
+    public List<Coupon> queryAll() {
+        return this.list();
+    }
 }

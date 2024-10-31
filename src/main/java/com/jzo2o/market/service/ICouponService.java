@@ -8,6 +8,7 @@ import com.jzo2o.common.model.PageResult;
 import com.jzo2o.market.model.domain.Coupon;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jzo2o.market.model.dto.request.CouponOperationPageQueryReqDTO;
+import com.jzo2o.market.model.dto.request.MyCouponReqDTO;
 import com.jzo2o.market.model.dto.request.SeizeCouponReqDTO;
 import com.jzo2o.market.model.dto.response.CouponInfoResDTO;
 
@@ -24,5 +25,22 @@ import java.util.List;
  */
 public interface ICouponService extends IService<Coupon> {
 
+    /**
+     * 查询领取记录
+     * @param couponOperationPageQueryReqDTO
+     * @return
+     */
+    PageResult<CouponInfoResDTO> pageQueryCoupon(CouponOperationPageQueryReqDTO couponOperationPageQueryReqDTO);
 
+    /**
+     * 领取优惠券
+     * @param myCouponReqDTO
+     */
+    CouponInfoResDTO myCoupon(MyCouponReqDTO myCouponReqDTO);
+
+    /**
+     * 查询所有优惠券
+     * @return
+     */
+    List<Coupon> queryAll();
 }
